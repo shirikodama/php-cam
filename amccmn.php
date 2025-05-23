@@ -16,8 +16,7 @@ if (! file_exists ($odir)) {
 }
 $adir = $odir;
 // the amcrest creates directories for hours and minutes
-if (! isset ($camuser))
-    $camuser = 'mike';
+$camuser = 'camuser';
 $dir = "/home/$camuser/" . $odir;
 $archdir = $odir;
 $path = '';
@@ -33,19 +32,7 @@ $odir .= $path;
 $dir .= $path;
 $files = array_slice (scandir ($dir, SCANDIR_SORT_ASCENDING), 2);
 
-if (isset ($REQUEST_METHOD)) {
-    if ($REQUEST_METHOD == "POST")
-	$http = $HTTP_POST_VARS;
-    else
-	$http = $HTTP_GET_VARS;
-} else {
-    if ($_SERVER ["REQUEST_METHOD"] == "POST")
-	$http = $_POST;
-    else
-	$http = $_GET;
-}
-
-if (isset ($http ["archive"])) {
+if (isset ($_GET["archive"])) {
     $it = new RecursiveDirectoryIterator($archdir);
     $archfiles = Array ();
     $pics = Array ( 'jpeg', 'jpg' );

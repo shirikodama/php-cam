@@ -37,9 +37,10 @@ td.bigred a {
 }
 
 td.navbar {
-    border-top: 1px solid;
-    border-bottom: 1px solid;
+    border-top: 2px solid;
+    border-bottom: 0px solid;
     margin-top: 2px;
+    padding-left:4px;
 }
 
 button.paging {

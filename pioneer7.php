@@ -10,7 +10,6 @@ date_default_timezone_set('America/Los_Angeles');
 // $solar -- the url of the iframe for the solar row
 
 $curhouse = "pioneer7";
-$camuser = "camuser";
 $amccamdir = '/sugarpine';
 include ('amccmn.php');
 
@@ -48,4 +47,5 @@ EOF;
 
 // finish off the rest
 include ("camcmn.php");
+include ("camhtml.php");
 ?>

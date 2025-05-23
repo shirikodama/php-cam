@@ -34,11 +34,11 @@
      var id = 'camfile';
      var req = new XMLHttpRequest ();
      req.addEventListener("load", function () {
-	 var img = document.getElementById(id);
-	 var src = req.responseText;
-	 img.src = src;
+         var img = document.getElementById(id);
+         var house = JSON.parse(req.responseText);
+	 img.src = house.camfile;
      });
-     req.open ("GET", curhouseurl+"?camfile=true");
+     req.open ("GET", curhouseurl+"?house=true");
      req.send ();
   }
 
@@ -82,7 +82,6 @@
 	 var files = resp.files;
 	 var jodir = resp.odir;
 	 archfiles = files;	 
-//	 console.log ("archive=", jodir);
 	 var html = '<table><tr>';
 	 var n = 0;
 	 files.sort (acmp);
@@ -111,19 +110,10 @@
      req.send ();
   }
 
-  function archEnlarge (file, entno) {
-     console.log ("entno=", entno);
-     if (1) {
-	 var img = document.getElementById('camfile');
-	 img.src = file;
-	 window.scrollTo(0, 0);
-     } else {
-	 console.log ("al=", archfiles.length, archfiles.length-entno);
-	 if (entno)
-	     window.location.href = curhouseurl+'?curframe='+entno;
-	 else
-	     window.location.href = curhouseurl;
-     }  
+  function archEnlarge (file, entno) { 
+     var img = document.getElementById('camfile');
+     img.src = file;
+     window.scrollTo(0, 0);
   }
 
   function toggleCamSize () {
@@ -151,7 +141,6 @@
   var gt;
   function bgoto (self, href) {
      gt = self;
-     console.log ("href=", href);
      window.location.href = href;
   }
 
@@ -165,8 +154,8 @@
  
   var curhouse = '<?php print $curhouse; ?>';
   var curhouseurl = curhouse+'.php';
-  var curframe = parseInt ('<?php print $curframe; ?>') || 0;
-
+  var curframe = parseInt ('<?php print $houses[$curhouse]['curframe']; ?>') || 0;
+  var houses = '<?php print json_encode($houses) ?>';
  
 
 </SCRIPT>
@@ -180,15 +169,12 @@
 //
 // $curhouse -- name of the cam calling this module
 // $houses -- array of houses and their properties
-// $curframe -- index into current set of file
-// $camfile -- image file for current pic
-
-
 // $links -- a list of links at the bottom of the cam pic
 // $solar -- a row for the solar info (if any)
 	   
 
-$setup_url = 'http://' . $houses[$curhouse]['ip']; 
+$setup_url = 'http://' . $houses[$curhouse]['ip'];
+$camfile = 'http://' . $houses[$curhouse]['camfile']; 
 $title = $houses[$curhouse]['title'];
 echo ("<th class=\"navbg bigred\" style=\"font-size:25px\">Cameras</th><th valign=center class=\"navbg\" style=\"padding:10px;\"><a class=\"bigred\" style=\"font-size: 30px\"href=$setup_url target=_blank>$title</a></th>");
 
@@ -202,8 +188,9 @@ foreach ($houses as $house => $value) {
 echo "</tr></table></td></tr>\n";
 
 // bottom utility nav
+$camfile = $houses[$curhouse]['camfile'];;
 echo "<tr><td align=center class=\"navbg\">";
-echo ("<div id=\"camdiv\"><img id=\"camfile\" src=$camfile alt=\"$title Cam\" class=\"main\" onload=\"setCamSize ()\" onclick=\"toggleCamSize()\" title=\"click for full size\"><br></div>");
+echo ("<div id=\"camdiv\"><img id=\"camfile\" src=\"$camfile\" alt=\"$title Cam\" class=\"main\" onload=\"setCamSize ()\" onclick=\"toggleCamSize()\" title=\"click for full size\"><br></div>");
 echo ("</td></tr><tr>");
 echo ("<td align=left class=\"navbg navbar\">");
 echo ("<button class=\"paging\" name=Movie onclick=\"lastDay('${curhouse}.mp4')\">Last Day</button>");
@@ -211,7 +198,7 @@ echo ("</td>");
 echo ("<td colspan=1 class=\"navbg navbar\" style=\"padding: 5px; text-align:center\">");
 echo ("<button class=\"paging\" name=Previous onclick=\"prevNext(-1)\">Previous</button>");
 echo ("<button class=\"paging\" name=Current onclick=\"prevNext(0)\">Current</button>");		
-if ($curframe < 0)
+if ($houses[$curhouse]['curframe'] < 0)
     echo ("<button class=\"paging\" name=Next onclick=\"prevNext(1)\">Next</button>");
 echo ("<button class=\"paging\" name=Archive onclick=\"showArchive()\" style=\"float:right\">Archive</button>");
 echo "</td></tr>";

@@ -2,9 +2,7 @@
 date_default_timezone_set('America/Los_Angeles');
 $curhouse = "pioneer2";
 
-//$days = 'home/camuser/pioneer2';
 $curday = date('Ymd');
-
 $odir =  'pioneer2/' . $curday . '/IMG001';
 $dir = '/home/camuser/home/camuser/' . $odir;
 $files = scandir ($dir, SCANDIR_SORT_ASCENDING);
@@ -13,19 +11,7 @@ $clon = -122.43067;
 $nwsurl = "http://ifps.wrh.noaa.gov/cgi-bin/dwf?outFormat=table&duration=72hr&interval=1&citylist=Select+City%2C$clat%2C$clon&latitude=$clat&longitude=$clon&latlon=Go&ZOOMLEVEL=1&XSTART=&YSTART=&XC=&YC=&X=&Y=&siteID=MTR";
 $gmd = gmdate("Ymd");
 
-if (isset ($REQUEST_METHOD)) {
-    if ($REQUEST_METHOD == "POST")
-	$http = $HTTP_POST_VARS;
-    else
-	$http = $HTTP_GET_VARS;
-} else {
-    if ($_SERVER ["REQUEST_METHOD"] == "POST")
-	$http = $_POST;
-    else
-	$http = $_GET;
-}
-
-if (isset ($http ["archive"])) {
+if (isset ($_GET ["archive"])) {
     $archfiles = [];
     for ($i = 0; $i < count ($files); $i++) {
 	if ($files [$i] == '.' || $files[$i] == '..')
@@ -52,5 +38,6 @@ EOF;
 
 // finish off the rest
 include ("camcmn.php");
+include ("camhtml.php");
 ?>
 

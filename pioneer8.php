@@ -10,7 +10,6 @@ date_default_timezone_set('America/Los_Angeles');
 // $solar -- the url of the iframe for the solar row
 
 $curhouse = "pioneer8";
-$camuser = "camuser";
 include ('amccmn.php');
 
 $solarfile = "https://monitoring.solaredge.com/solaredge-web/p/site/593702";
@@ -47,4 +46,5 @@ EOF;
 
 // finish off the rest
 include ("camcmn.php");
+include ("camhtml.php");
 ?>
