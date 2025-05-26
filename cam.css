@@ -45,13 +45,13 @@ td.navbar {
 
 button.paging {
     height:30px;
-    width:70px;    
+    width:90px;    
     text-decoration: none;
     background-color:#006400;
     color:#ddd;
     border-radius: 10px;
     border-color: #ddd;
-    padding:5px;    
+/*    padding:10px;     */
 }
 
 button.nav {
