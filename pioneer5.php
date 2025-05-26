@@ -10,11 +10,11 @@ date_default_timezone_set('America/Los_Angeles');
 // $solar -- the url of the iframe for the solar row
 
 $curhouse = "pioneer5";
-include ("amccmn.php");
+include ("/home/mike/php-cams/amccmn.php");
 
 // finish off the rest
-include ("links.php");
+include ("/home/mike/php-cams/links.php");
 $links = $plinks;
-include ("camcmn.php");
-include ("camhtml.php");
+include ("/home/mike/php-cams/camcmn.php");
+include ("/home/mike/php-cams/camhtml.php");
 ?>

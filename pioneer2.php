@@ -17,9 +17,9 @@ if (isset ($_GET ["archive"])) {
 }
 
 // finish off the rest
-include ("links.php");
+include ("/home/mike/php-cams/links.php");
 $links = $sflinks;
-include ("camcmn.php");
-include ("camhtml.php");
+include ("/home/mike/php-cams/camcmn.php");
+include ("/home/mike/php-cams/camhtml.php");
 ?>
 

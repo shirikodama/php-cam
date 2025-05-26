@@ -1,0 +1,62 @@
+#!/usr/bin/ruby
+require 'optparse'
+
+outjpg = '/tmp/outjpg.out'
+convjpg = '/tmp/convjpg.out'
+outdir = '/home/mike/public_html/'
+
+options = {:resize => '640x480' }
+
+OptionParser.new do |opts|
+  opts.banner = "Usage: jpg2mp4 [options]"
+
+  opts.on("-v", "--verbose", "verbose") do |v|
+    options[:verbose] = v;
+  end
+  opts.on("-oName", "--out=Name", "output the mp4 to specified file") do |o|
+    options[:output] = o
+  end
+  opts.on("-rName", "--resize=Name", "resize to geometry -rXXXxYYY") do |r|
+    options[:resize] = r
+  end  
+  opts.on("-D", "--[no-]dry", "Dry run (don't change anything") do |d|
+    options[:dry] = true
+  end
+end.parse!
+
+puts options if options[:verbose]
+
+Dir.chdir "/home/camuser"
+dir = ARGV[0]
+ofile = File.basename dir
+if options[:output]
+  outmp4 = options[:output]
+else
+  outmp4 = outdir + ofile + '.mp4'
+end
+
+files = (`find #{dir} -type f -name '*.jpg' |sort`).split "\n"
+
+begin
+  File.delete outjpg
+rescue
+end
+
+puts "cat jpg #{files.length} jpgs..." if options[:verbose]
+i = 1
+files.each do |file|
+  puts "#{i}/#{files.length} #{file}" if options[:verbose] if options[:verbose]
+  system "convert #{file} -resize #{options[:resize]} #{convjpg}"
+  system "cat #{convjpg} >> #{outjpg}"
+  i += 1
+end
+puts "ffmpeg..." if options[:verbose]
+cmd = "cat #{outjpg} | ffmpeg -y -framerate 10 -f image2pipe -i - -vf scale=#{options[:resize]} -c:v libx264 -r 30 -pix_fmt yuv420p #{outmp4}"
+cmd = cmd + ' 2>/dev/null' if not options[:verbose]
+puts cmd if options[:verbose]
+system(cmd) unless options[:dry]
+
+begin
+  File.delete outjpg
+rescue
+end
