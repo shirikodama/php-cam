@@ -2,7 +2,6 @@
 require 'optparse'
 
 outjpg = '/tmp/outjpg.out'
-convjpg = '/tmp/convjpg.out'
 outdir = '/home/mike/public_html/'
 
 options = {:resize => '640x480' }
@@ -42,14 +41,17 @@ begin
 rescue
 end
 
-puts "cat jpg #{files.length} jpgs..." if options[:verbose]
+puts "process #{files.length} jpgs" if options[:verbose]
 i = 1
+tottime = 0.0
 files.each do |file|
-  puts "#{i}/#{files.length} #{file}" if options[:verbose] if options[:verbose]
-  system "convert #{file} -resize #{options[:resize]} #{convjpg}"
-  system "cat #{convjpg} >> #{outjpg}"
+  s = File.size(file) / 1000
+  time = (`time -f '%e'  2>&1 convert #{file} -scale #{options[:resize]} JPG:- >>#{outjpg}`).strip
+  puts "#{i}/#{files.length} #{file} (#{s}k #{time}s)" if options[:verbose]
+  tottime += time.to_f
   i += 1
 end
+puts "elapsed time for convert: #{tottime}s" if options[:verbose]
 puts "ffmpeg..." if options[:verbose]
 cmd = "cat #{outjpg} | ffmpeg -y -framerate 10 -f image2pipe -i - -vf scale=#{options[:resize]} -c:v libx264 -r 30 -pix_fmt yuv420p #{outmp4}"
 cmd = cmd + ' 2>/dev/null' if not options[:verbose]
