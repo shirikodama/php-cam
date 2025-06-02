@@ -2,11 +2,6 @@
 date_default_timezone_set('America/Los_Angeles');
 $curhouse = "pioneer3";
 
-// get the requested files
-$curday = date('Ymd');
-$odir = $curhouse . '/' .$curday . '/images/';
-$dir = '/home/camuser/' . $odir;
-
 function mscandir($dir) {
     $files = array();
     foreach (scandir($dir) as $file) {
@@ -18,7 +13,14 @@ function mscandir($dir) {
     return $files;
 }
 
-$files = mscandir ($dir);
+function pioneer3 () {
+    global $files, $odir, $dir, $curhouse;
+    // get the requested files
+    $curday = date('Ymd');
+    $odir = $curhouse . '/' .$curday . '/images/';
+    $dir = '/home/camuser/' . $odir;    
+    $files = mscandir ($dir);
+}
 
 if (isset ($_GET ["archive"])) {
     $archfiles = [];
@@ -30,9 +32,14 @@ if (isset ($_GET ["archive"])) {
     }
 }
 
-// finish off the rest
-include ("/home/mike/php-cams/links.php");
-$links = $sflinks;
-include ("/home/mike/php-cams/camcmn.php");
-include ("/home/mike/php-cams/camhtml.php");
+
+if (! isset ($_GET['noinit'])) {
+    pioneer3 ();
+    // finish off the rest
+    include ("/home/mike/php-cams/links.php");
+    $links = $sflinks;
+    include ("/home/mike/php-cams/camcmn.php");
+    caminit ();
+    include ("/home/mike/php-cams/camhtml.php");
+}
 ?>

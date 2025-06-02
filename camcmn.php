@@ -12,16 +12,23 @@
 
 
 $houses = array (
-    'pioneer7' => array ('cam' => 'pioneer7', 'title' => 'Sugar Pine Dr', 'ip' => '192.168.1.197', 'curframe' => 0, 'camfile' =>''),    
-    'pioneer5' => array ('cam' => 'pioneer5','title' => 'Morningwood Driveway', 'ip' => '192.168.1.109', 'curframe' => 0, 'camfile' =>''),
-    'pioneer4' => array ('cam' => 'pioneer4','title' => 'Morningwood Carport', 'ip' => '192.168.1.169', 'curframe' => 0, 'camfile' =>''),
-    'pioneer6' => array ('cam' => 'pioneer6','title' => 'Morningwood Farms', 'ip' => '192.168.1.237', 'curframe' => 0, 'camfile' =>''),
-    'pioneer8' => array ('cam' => 'pioneer8','title' => 'Summit Haus', 'ip' => '192.168.1.235', 'curframe' => 0, 'camfile' =>''),    
-    'pioneer2' => array ('cam' => 'pioneer2','title' => 'Summit East', 'ip' => '192.168.1.199', 'curframe' => 0, 'camfile' =>''),
-    'pioneer3' => array ('cam' => 'pioneer3','title' => 'Morningwood North', 'ip' => '192.168.1.230', 'curframe' => 0, 'camfile' =>''), 
-    'pioneer'  => array ('cam' => 'pioneer','title' => 'Deer Court', 'ip' => '192.168.1.198', 'curframe' => 0, 'camfile' =>''),
+    'pioneer7' => array ('cam' => 'pioneer7', 'title' => 'Sugar Pine Dr', 'ip' => '192.168.1.197', 'curframe' => 0, 'camfile' =>'', 'amc' => true, 'dir' => '/sugarpine'),
+    'pioneer5' => array ('cam' => 'pioneer5','title' => 'Morningwood Driveway', 'ip' => '192.168.1.109', 'curframe' => 0, 'camfile' =>'', 'amc' => true, 'dir' => NULL),
+    'pioneer4' => array ('cam' => 'pioneer4','title' => 'Morningwood Carport', 'ip' => '192.168.1.169', 'curframe' => 0, 'camfile' =>'', 'amc' => true, 'dir' => NULL),
+    'pioneer6' => array ('cam' => 'pioneer6','title' => 'Morningwood Farms', 'ip' => '192.168.1.237', 'curframe' => 0, 'camfile' =>'', 'amc' => true, 'dir'=> '/garden'),
+    'pioneer8' => array ('cam' => 'pioneer8','title' => 'Summit Haus', 'ip' => '192.168.1.235', 'curframe' => 0, 'camfile' =>'', 'amc' => true, 'dir' => NULL),
+    'pioneer2' => array ('cam' => 'pioneer2','title' => 'Summit East', 'ip' => '192.168.1.199', 'curframe' => 0, 'camfile' =>'', 'amc' => false, 'dir' => NULL),
+    'pioneer3' => array ('cam' => 'pioneer3','title' => 'Morningwood North', 'ip' => '192.168.1.230', 'curframe' => 0, 'camfile' =>'','amc' => false, 'dir' => NULL),
+    'pioneer'  => array ('cam' => 'pioneer','title' => 'Deer Court', 'ip' => '192.168.1.198', 'curframe' => 0, 'camfile' =>'', 'amc' => true, 'dir' => NULL),
 );
-    
+
+function is_localip () {
+    $ip = $_SERVER['REMOTE_ADDR'];
+    // something is "local" if it's not on the local subnet and it's not the router. this is lame, but i don't want to set up real access control
+    if (strpos ($ip, "192.168.1.") !== 0 || strpos ($ip, "192.168.1.1") === 0)
+	return false;
+    return true;
+}    
 
 function caminit () {
     global $curhouse, $files, $odir, $houses;
@@ -52,17 +59,17 @@ function caminit () {
         }
     }
     $houses[$curhouse]['camfile'] = $camfile;
-    $houses[$curhouse]['curframe'] = $curframe;    
-
+    $houses[$curhouse]['curframe'] = $curframe;
+    return $houses[$curhouse];
 }
 
-caminit ();
-
 if (isset ($_GET['house'])) {
+    caminit ();
     die(json_encode($houses[$curhouse]));
 }
 
 if (isset ($_GET['archive'])) {
+    caminit ();
     $jfiles = [];
     $i = 0;
     foreach ($archfiles as $file) {

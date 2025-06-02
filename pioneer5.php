@@ -11,10 +11,13 @@ date_default_timezone_set('America/Los_Angeles');
 
 $curhouse = "pioneer5";
 include ("/home/mike/php-cams/amccmn.php");
+amcinit ($curhouse);
 
 // finish off the rest
+include ("/home/mike/php-cams/camcmn.php");
+caminit ();
+
 include ("/home/mike/php-cams/links.php");
 $links = $plinks;
-include ("/home/mike/php-cams/camcmn.php");
 include ("/home/mike/php-cams/camhtml.php");
 ?>

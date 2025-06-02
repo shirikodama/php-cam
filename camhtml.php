@@ -138,10 +138,9 @@
   
   refresh ();
 
-  var gt;
-  function bgoto (self, href) {
-     gt = self;
-     window.location.href = href;
+  function bgoto (self, href, newtab) {
+      //window.location.href = href;
+      window.open (href, newtab ? "_blank" : null);
   }
 
   function lastDay (file) {
@@ -173,17 +172,24 @@
 // $solar -- a row for the solar info (if any)
 	   
 
+$ip = $houses[$curhouse]['ip'];
 $setup_url = 'http://' . $houses[$curhouse]['ip'];
+$rtsp_url = 'rtsp://' . $houses[$curhouse]['ip'] . ':554';
 $camfile = 'http://' . $houses[$curhouse]['camfile']; 
 $title = $houses[$curhouse]['title'];
-echo ("<th class=\"navbg bigred\" style=\"font-size:25px\">Cameras</th><th valign=center class=\"navbg\" style=\"padding:10px;\"><a class=\"bigred\" style=\"font-size: 30px\"href=$setup_url target=_blank>$title</a></th>");
-
-
+echo ("<th class=\"navbg bigred\" style=\"font-size:25px\">Cameras</th>");
+echo ("<th valign=center class=\"navbg fs30\" style=\"padding:10px;\">");
+echo ("<button title=\"Login to $curhouse ($ip)\" class=\"nav\" onclick=\"bgoto(this, '$setup_url', true)\">$title</button>");
+//if (is_localip ())
+echo ("<button title=\"Live Feed of $curhouse ($ip)\" class=\"title\" style=\"float:right\" onclick=\"bgoto(this, '$rtsp_url', false)\">Live</button>");
+echo ("</th>");
 echo "</tr><tr><td align=center rowspan=2 valign=top class=\"navbg\">";
 echo "<table><tr><td align=center class=\"bigred\"></td></tr>\n";
+echo "<tr><td style=\"padding-bottom: 10px;\"><button class=\"nav\" title=\"Camera Home\" onclick=\"bgoto(this, 'cams.php', false)\">Pioneer Home</button>";
+echo "</td></tr>";
 foreach ($houses as $house => $value) {
     $ti = $value['title'];
-    echo "<tr><td style=\"padding-bottom: 10px;\"><button class=\"nav\" title=\"$house.php\" onclick=\"bgoto(this, '$house.php')\">$ti</button></td></tr>\n";    
+    echo "<tr><td style=\"padding-bottom: 10px;\"><button class=\"nav\" title=\"Switch to $house ($ip)\" onclick=\"bgoto(this, '$house.php', false)\">$ti</button></td></tr>\n";    
 }
 echo "</tr></table></td></tr>\n";
 
@@ -203,7 +209,6 @@ if ($houses[$curhouse]['curframe'] < 0)
 echo ("<button class=\"paging\" name=Archive onclick=\"showArchive()\" style=\"float:right\">Archive</button>");
 echo "</td></tr>";
 echo "<tr><td align=center colspan=2 class=\"bigred navbg navbar\"><span class=\"navlinks\">$links</span></td></tr>";
-//echo "<tr><td colspan=2 cellpadding=0 cellspacing=0>$solar</td></tr>";
 
 ?>
     </table>
